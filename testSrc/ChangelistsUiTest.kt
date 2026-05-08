@@ -3,6 +3,7 @@ import com.intellij.driver.sdk.ui.components.common.ideFrame
 import com.intellij.driver.sdk.ui.components.elements.button
 import com.intellij.driver.sdk.ui.components.elements.checkBox
 import com.intellij.driver.sdk.ui.components.settings.settingsDialog
+import com.intellij.driver.sdk.ui.should
 import com.intellij.driver.sdk.waitForIndicators
 import com.intellij.ide.starter.driver.engine.runIdeWithDriver
 import com.intellij.ide.starter.junit5.hyphenateWithClass
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import kotlin.time.Duration.Companion.minutes
 import com.intellij.openapi.util.SystemInfo
+import kotlin.time.Duration.Companion.seconds
 
 class ChangelistsUiTest {
     /**
@@ -60,6 +62,7 @@ class ChangelistsUiTest {
                 }
 
                 settingsDialog {
+                    settingsTree.waitFound()
                     // In Settings, navigate to Version Control -> Changelists
                     openTreeSettingsSection("Version Control", "Changelists")
                     // In Changelists, ensure checkbox "Create changelists automatically" is selected
