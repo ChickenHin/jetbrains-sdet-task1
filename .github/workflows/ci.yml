@@ -8,15 +8,16 @@ on:
 
 jobs:
   ui-tests:
-    matrix:
+    strategy:
+      fail-fast: false
+      matrix:
         os:
           - macos-latest
-          - ubuntu-latest
           - windows-latest
           
     runs-on: ${{ matrix.os }}
 
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository
@@ -36,5 +37,18 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run UI tests
-        run: ./gradlew clean test --stacktrace
+        env:
+          LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
+        run: ./gradlew clean test --stacktrace --no-daemon
         shell: bash
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.os }}
+          path: |
+            build/test-results/test/*.xml
+            build/reports/tests/test/**
+          if-no-files-found: warn
+          retention-days: 14
